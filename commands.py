@@ -1,8 +1,10 @@
 # Viewer playing commands
 
-def forward(t_forward, t_backwards):
+def forward():
     forward = True
     backwards = False
 
-#def backwards()
+def backwards():
+    forward = False
+    backwards = True
 

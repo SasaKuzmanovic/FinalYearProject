@@ -1,5 +1,7 @@
 import discord
 import commands
+import pygame
+
 
 intents = discord.Intents.all()
 client = discord.Client(command_prefix='!', intents=intents)
@@ -7,16 +9,69 @@ client = discord.Client(command_prefix='!', intents=intents)
 myGuild = ""
 role = ""
 
+neCekam = False
+
+joysticks = {}
+
 memberList = []
 
 @client.event
 async def on_ready():
+
     myGuild = client.get_guild(1047959171825405972)
     role = discord.utils.get(myGuild.roles, id=1047961554680823898)
 
     print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
     print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
     print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
+
+    pygame.init()
+
+    print(f'PYGAME initialised')
+
+    #screen = pygame.display.set_mode((500, 700))
+
+    #clock = pygame.time.Clock()
+    # Used to manage how fast the screen updates.
+    joysticks = {}
+   
+
+    pygame.joystick.init()
+    if pygame.joystick.get_count() > 0:
+        print(f'Initan sam')
+
+    waitingForInput()
+    
+
+
+def waitingForInput():
+    done = False
+    while not done:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True  # Flag that we are done so we exit this loop.
+
+            if event.type == pygame.JOYBUTTONDOWN:
+                print("Joystick button pressed.")
+                if event.button == 0:
+                    joystick = joysticks[event.instance_id]
+                    if joystick.rumble(0, 0.7, 500):
+                        print(f"Rumble effect played on joystick {event.instance_id}")
+
+            if event.type == pygame.JOYBUTTONUP:
+                print("Joystick button released.")
+
+            # Handle hotplugging
+            if event.type == pygame.JOYDEVICEADDED:
+                joy = pygame.joystick.Joystick(event.device_index)
+                joysticks[joy.get_instance_id()] = joy
+                print(f"Joystick {joy.get_instance_id()} connencted")
+
+            if event.type == pygame.JOYDEVICEREMOVED:
+                del joysticks[event.instance_id]
+                print(f"Joystick {event.instance_id} disconnected")
+
 
 @client.event
 async def on_message(message):
@@ -47,30 +102,17 @@ async def on_message(message):
 
 
         if message.content.startswith('Forward'):
-            commands.forward(forward, backwards)
+            commands.forward()
             await message.channel.send('Forward Control Toggled!')
 
-
-        # Control toggling
-        #if message.content.startswith('Forward'):
-            #forward = True
-            #if backwards == True:
-                #backwards = False
-                #await message.channel.send('Backwards Control Toggled OFF!')
-            #await message.channel.send('Forward Control Toggled!')
-
-
         if message.content.startswith('Backwards'):
-            backwards = True
-            if forward == True:
-                forward = False
-                await message.channel.send('Forward Control Toggled OFF!')     
+            commands.backwards()   
             await message.channel.send('Backwards Control Toggled!')
-
     else:
         await message.channel.send('You do not have the permission to control the game!')
         
 
 client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.GrAq9T.Zw3XsSIcGbsvHKuJHHYLoMZYoCOfw-j8LJZNp8")
+
 
 ## Try getting input working in the game
