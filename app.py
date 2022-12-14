@@ -29,11 +29,6 @@ async def on_ready():
 
     print(f'PYGAME initialised')
 
-    #screen = pygame.display.set_mode((500, 700))
-
-    #clock = pygame.time.Clock()
-    # Used to manage how fast the screen updates.
-    joysticks = {}
    
 
     pygame.joystick.init()
@@ -54,7 +49,9 @@ def waitingForInput():
 
             if event.type == pygame.JOYBUTTONDOWN:
                 print("Joystick button pressed.")
-                if event.button == 0:
+                if event.button == 0: ## This is X
+                    # To be added   1. Add message sending to channels
+                    #               2. Triggering a function when a button is pressed and the message is sent to discord. Try to trigger the function before the message is sent to reduce latency
                     joystick = joysticks[event.instance_id]
                     if joystick.rumble(0, 0.7, 500):
                         print(f"Rumble effect played on joystick {event.instance_id}")
