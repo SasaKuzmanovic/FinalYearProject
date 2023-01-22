@@ -37,7 +37,7 @@ async def on_ready():
     if pygame.joystick.get_count() > 0:
         print(f'Initan sam')
 
-    waitingForInput()
+   # waitingForInput()
     
 
 
@@ -102,6 +102,7 @@ async def on_message(message):
 
 
         if message.content.startswith('Forward'):
+            keyboard.press('a')
             commands.forward()
             await message.channel.send('Forward Control Toggled!')
 
