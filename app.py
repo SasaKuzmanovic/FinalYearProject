@@ -10,6 +10,8 @@ client = discord.Client(command_prefix='!', intents=intents)
 myGuild = ""
 role = ""
 
+saveChannel = ""
+
 neCekam = False
 
 joysticks = {}
@@ -19,32 +21,38 @@ memberList = []
 
 @client.event
 async def on_ready():
-
-    myGuild = client.get_guild(1047959171825405972)
-    role = discord.utils.get(myGuild.roles, id=1047961554680823898)
-
-    print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
-    print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
-    print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
-
     pygame.init()
-
-    print(f'PYGAME initialised')
-
-   
 
     pygame.joystick.init()
     if pygame.joystick.get_count() > 0:
         print(f'Initan sam')
 
-   # waitingForInput()
+    print(f'PYGAME initialised')
+
+    print(f'Choose if you are a streamer or a viewer!')
+    print(f'Select [1] if you are a streamer')
+    print(f'Or select [2] if you are a viewer')
+
     
 
+
+    value = input('Type 1 or 2:')
+
+    if value == '2':
+        waitingForInput()
+    else:
+        myGuild = client.get_guild(1047959171825405972)
+        role = discord.utils.get(myGuild.roles, id=1047961554680823898)
+
+        print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
+        print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
+        print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
+
+    
 
 def waitingForInput():
     done = False
     while not done:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True  # Flag that we are done so we exit this loop.
@@ -55,9 +63,26 @@ def waitingForInput():
                     # To be added   1. Add message sending to channels
                     #               2. Triggering a function when a button is pressed and the message is sent to discord. Try to trigger the function before the message is sent to reduce latency
                     joystick = joysticks[event.instance_id]
+                    keyboard.press('s')
+                    keyboard.press('p')
                     keyboard.press('a')
+                    keyboard.press('c')
+                    keyboard.press('e')
+                    keyboard.press(Key.enter)
                     if joystick.rumble(0, 0.7, 500):
                         print(f"Rumble effect played on joystick {event.instance_id}")
+                if event.button == 1:
+                    joystick = joysticks[event.instance_id]
+                    keyboard.press('y')
+                    keyboard.press(Key.enter)
+                if event.button == 13:
+                    joystick = joysticks[event.instance_id]
+                    keyboard.press('a')
+                    keyboard.press(Key.enter)
+                if event.button == 14:
+                    joystick = joysticks[event.instance_id]
+                    keyboard.press('d')
+                    keyboard.press(Key.enter)
 
             if event.type == pygame.JOYBUTTONUP:
                 print("Joystick button released.")
@@ -81,7 +106,7 @@ async def on_message(message):
     backwards = False
     left = False
     right = False   
-
+    saveChannel = message.channel
 
     myGuild = client.get_guild(1047959171825405972)
     role = discord.utils.get(myGuild.roles, id=1047961554680823898)
@@ -94,7 +119,9 @@ async def on_message(message):
     if user in memberList:
         print(f'User: {user} has the role: {role}')
 
-        
+        print(message.content)
+        commands.checkForContents(message)
+
         if message.author == client.user:
             return
         if message.content.startswith('Hello'):
