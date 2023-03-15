@@ -63,11 +63,7 @@ def waitingForInput():
                     # To be added   1. Add message sending to channels
                     #               2. Triggering a function when a button is pressed and the message is sent to discord. Try to trigger the function before the message is sent to reduce latency
                     joystick = joysticks[event.instance_id]
-                    keyboard.press('s')
-                    keyboard.press('p')
-                    keyboard.press('a')
-                    keyboard.press('c')
-                    keyboard.press('e')
+                    keyboard.press('w')
                     keyboard.press(Key.enter)
                     if joystick.rumble(0, 0.7, 500):
                         print(f"Rumble effect played on joystick {event.instance_id}")
