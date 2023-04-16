@@ -1,6 +1,8 @@
 import discord
 import commands
+import button_presets
 import pygame
+import time
 from pynput.keyboard import Key, Controller
 
 
@@ -25,28 +27,35 @@ async def on_ready():
 
     pygame.joystick.init()
     if pygame.joystick.get_count() > 0:
-        print(f'Initan sam')
+        print(f'Initan sam') 
 
-    print(f'PYGAME initialised')
+    button_presets.controlIntro()
 
     print(f'Choose if you are a streamer or a viewer!')
     print(f'Select [1] if you are a streamer')
     print(f'Or select [2] if you are a viewer')
 
-    
-
-
     value = input('Type 1 or 2:')
 
     if value == '2':
+        print('====================================')
+        print('========You are now a viewer========')
+        print('====================================')
+        print('====You can now CONTROL the game====')
         waitingForInput()
     else:
+        print('====================================')
+        print('=========Streamer Selected==========')
+
+        time.sleep(1)
+        print('====================================')
+        print('Enjoy shared gameplay')
         myGuild = client.get_guild(1047959171825405972)
         role = discord.utils.get(myGuild.roles, id=1047961554680823898)
 
-        print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
-        print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
-        print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
+        #print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
+        #print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
+        #print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
 
     
 
@@ -136,7 +145,7 @@ async def on_message(message):
         await message.channel.send('You do not have the permission to control the game!')
         
 
-client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.GrAq9T.Zw3XsSIcGbsvHKuJHHYLoMZYoCOfw-j8LJZNp8")
+client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.G5XCLt.ZOodFHcrD54e8oWgtuhjNejRUWeFBEeQHR0z2w")
 
 
 ## Try getting input working in the game

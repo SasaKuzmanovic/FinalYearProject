@@ -1,1 +1,0 @@
-https://nitratine.net/blog/post/simulate-keypresses-in-python/
