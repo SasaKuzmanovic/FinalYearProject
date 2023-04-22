@@ -9,8 +9,8 @@ import socket
 from pynput.keyboard import Key, Controller
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-SENDER_IP = ""
-TCP_IP = "127.0.0.1"
+SERVER_IP = "51.37.224.10"
+TCP_IP = ""
 PORT = 9000
 buffer_size = 1024
 msg = ("X PRESSED...")
@@ -51,26 +51,22 @@ async def on_ready():
         print('====================================')
         print('========You are now a viewer========')
         print('====================================')
+        sock.connect((SERVER_IP, PORT))
         waitingForInput()
     else:
         print('====================================')
         print('=========Streamer Selected==========')
-        print('=============Please IP==============')
-        SENDER_IP = input()
-
-        time.sleep(1)
         print('====================================')
         print('Enjoy shared gameplay')
         waitForInput()
-        myGuild = client.get_guild(1047959171825405972)
-        role = discord.utils.get(myGuild.roles, id=1047961554680823898)
+        #myGuild = client.get_guild(1047959171825405972)
+        #role = discord.utils.get(myGuild.roles, id=1047961554680823898)
 
         #print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
         #print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
         #print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
 
 def sendInput():
-    sock.connect((TCP_IP, PORT))
     print("Attempting to send message: " + msg)
     sock.send(msg.encode('utf8'))
 
@@ -82,22 +78,21 @@ def waitForInput():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_ip = ""
     port = 9000
+    s.bind((tcp_ip, port))
     while not False:
-        s.bind((tcp_ip, port))
         s.listen(1)
-        con, addr = s.accept()
-        print("Connection from: ", addr)
 
-
-        while True:
-            data = con.recv(buffer_size).decode('utf-8')
-            if not data:
-                break
-            print("Data received: " + data)
-            data = "I Got it thanks"
-            print("Sending response: " + data)
-            con.send(data.encode('utf-8'))
-        sock.close()
+    con, addr = s.accept()
+    print("Connection from: ", addr)
+    while True:
+        data = con.recv(buffer_size).decode('utf-8')
+        if not data:
+            break
+        print("Data received: " + data)
+        data = "I Got it thanks"
+        print("Sending response: " + data)
+        con.send(data.encode('utf-8'))
+    sock.close()
 
 def waitingForInput():
     done = False
