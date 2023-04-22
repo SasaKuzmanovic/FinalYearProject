@@ -1,6 +1,8 @@
 # Viewer playing commands
 from pynput.keyboard import Key, Controller
 
+import time
+
 keyboard = Controller()
 
 def forward():
@@ -14,15 +16,25 @@ def backwards():
 def checkForContents(message):
     if message.content == 'd':
         print(message.content)
-        keyboard.release(Key.left)
         keyboard.press(Key.right)
     if message.content == 'a':
-        keyboard.release(Key.right)
         keyboard.press(Key.left)
         print(message.content)
-    if message.content == 'b':
+    if message.content == 's':
+        keyboard.release(Key.left)
+        keyboard.press(Key.down)
         keyboard.release(Key.left)
     if message.content == 'w':
-        print(message.content)
-        keyboard.release(Key.up)
+        print("I am holding UP")
+
+        #keyboard.release(Key.up)
         keyboard.press(Key.up)
+
+
+def ARROW_Preset(message):
+    if message.content == 'w':
+        print(message.content)
+
+def WASD_Preset(message):
+    if message.content == 'w':
+        print(message.content)

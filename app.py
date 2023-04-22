@@ -90,7 +90,15 @@ def waitingForInput():
                     keyboard.press(Key.enter)
 
             if event.type == pygame.JOYBUTTONUP:
-                print("Joystick button released.")
+                if event.button == 0:
+                    keyboard.release(Key.up)
+                    print("I tried Release UP")
+                if event.button == 13:
+                    keyboard.release(Key.left)
+                    print("I released left")
+                if event.button == 14:
+                    keyboard.release(Key.right)
+                    print("I released right")
 
             # Handle hotplugging
             if event.type == pygame.JOYDEVICEADDED:
@@ -146,6 +154,3 @@ async def on_message(message):
         
 
 client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.G5XCLt.ZOodFHcrD54e8oWgtuhjNejRUWeFBEeQHR0z2w")
-
-
-## Try getting input working in the game
