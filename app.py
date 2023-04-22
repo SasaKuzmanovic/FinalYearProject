@@ -3,7 +3,17 @@ import commands
 import button_presets
 import pygame
 import time
+import socket
+
+
 from pynput.keyboard import Key, Controller
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+SENDER_IP = ""
+TCP_IP = "127.0.0.1"
+PORT = 9000
+buffer_size = 1024
+msg = ("X PRESSED...")
 
 
 intents = discord.Intents.all()
@@ -41,15 +51,17 @@ async def on_ready():
         print('====================================')
         print('========You are now a viewer========')
         print('====================================')
-        print('====You can now CONTROL the game====')
         waitingForInput()
     else:
         print('====================================')
         print('=========Streamer Selected==========')
+        print('=============Please IP==============')
+        SENDER_IP = input()
 
         time.sleep(1)
         print('====================================')
         print('Enjoy shared gameplay')
+        waitForInput()
         myGuild = client.get_guild(1047959171825405972)
         role = discord.utils.get(myGuild.roles, id=1047961554680823898)
 
@@ -57,11 +69,40 @@ async def on_ready():
         #print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
         #print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
 
-    
+def sendInput():
+    sock.connect((TCP_IP, PORT))
+    print("Attempting to send message: " + msg)
+    sock.send(msg.encode('utf8'))
+
+    data = sock.recv(buffer_size).decode('utf-8')
+    print("Received: " + data)
+
+
+def waitForInput():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    tcp_ip = ""
+    port = 9000
+    while not False:
+        s.bind((tcp_ip, port))
+        s.listen(1)
+        con, addr = s.accept()
+        print("Connection from: ", addr)
+
+
+        while True:
+            data = con.recv(buffer_size).decode('utf-8')
+            if not data:
+                break
+            print("Data received: " + data)
+            data = "I Got it thanks"
+            print("Sending response: " + data)
+            con.send(data.encode('utf-8'))
+        sock.close()
 
 def waitingForInput():
     done = False
     while not done:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True  # Flag that we are done so we exit this loop.
@@ -76,6 +117,7 @@ def waitingForInput():
                     keyboard.press(Key.enter)
                     if joystick.rumble(0, 0.7, 500):
                         print(f"Rumble effect played on joystick {event.instance_id}")
+                    sendInput()
                 if event.button == 1:
                     joystick = joysticks[event.instance_id]
                     keyboard.press('y')
@@ -91,12 +133,15 @@ def waitingForInput():
 
             if event.type == pygame.JOYBUTTONUP:
                 if event.button == 0:
+                    time.sleep(0.2)
                     keyboard.release(Key.up)
                     print("I tried Release UP")
                 if event.button == 13:
+                    time.sleep(0.1)
                     keyboard.release(Key.left)
                     print("I released left")
                 if event.button == 14:
+                    time.sleep(0.1)
                     keyboard.release(Key.right)
                     print("I released right")
 
