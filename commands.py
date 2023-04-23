@@ -16,18 +16,21 @@ def backwards():
 def checkForContents(message):
     if message== 'd':
         keyboard.press(Key.right)
+        print("DDDDDDDDDDDDDDDDDDDDDDDD")
     if message== 'dr':
         keyboard.release(Key.right)
         print("D Released")
 
     if message== 'a':
         keyboard.press(Key.left)
+        print("AAAAAAAAAAAAAAAAAAAAAAA")
     if message== 'ar':
         keyboard.release(Key.left)
         print("A Released")
 
     if message== 's':
         keyboard.press(Key.down)
+        print("SSSSSSSSSSSSSSSSSSSSSSSSS")
     if message== 'sr':
         keyboard.release(Key.down)
         print("S Released")

@@ -25,8 +25,6 @@ role = ""
 
 saveChannel = ""
 
-neCekam = False
-
 joysticks = {}
 keyboard = Controller()
 
@@ -52,16 +50,17 @@ async def on_ready():
         print('====================================')
         print('========You are now a viewer========')
         print('====================================')
-        sock.connect((SERVER_IP, PORT))
-        waitingForInput()
+        #sock.connect((SERVER_IP, PORT))
+        #waitingForInput()
     else:
+        myGuild = client.get_guild(1047959171825405972)
+        role = discord.utils.get(myGuild.roles, id=1047961554680823898)
         print('====================================')
         print('=========Streamer Selected==========')
         print('====================================')
         print('Enjoy shared gameplay')
         waitForInput()
-        #myGuild = client.get_guild(1047959171825405972)
-        #role = discord.utils.get(myGuild.roles, id=1047961554680823898)
+        
 
         #print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
         #print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
@@ -90,10 +89,10 @@ def waitForInput():
             break
         print("Data received: " + data)
         buttonToBePressed = data
-        #print("Sending response: " + data)
+        commands.checkForContents(buttonToBePressed)
         con.send(data.encode('utf-8'))
     s.close()
-    commands.checkForContents(buttonToBePressed)
+    
 
 def waitingForInput():
     done = False
@@ -121,16 +120,16 @@ def waitingForInput():
                 if event.button == 14:
                     sendInput('d')
 
-            if event.type == pygame.JOYBUTTONUP:
-                if event.button == 0:
+            #if event.type == pygame.JOYBUTTONUP:
+                #if event.button == 0:
                     #time.sleep(0.2)
                     #keyboard.release(Key.up)
                     #print("I tried Release UP")
-                    sendInput('wr')
-                if event.button == 13:
-                    sendInput('ar')
-                if event.button == 14:
-                    sendInput('dr')
+                    #sendInput('wr')
+               #if event.button == 13:
+                    #sendInput('ar')
+               # if event.button == 14:
+                    #sendInput('dr')
 
             # Handle hotplugging
             if event.type == pygame.JOYDEVICEADDED:
@@ -173,14 +172,14 @@ async def on_message(message):
             await message.channel.send('Sup!')
 
 
-        if message.content.startswith('Forward'):
-            keyboard.press('a')
-            commands.forward()
-            await message.channel.send('Forward Control Toggled!')
+        if message.content.startswith('Play'):
+            await message.channel.send('You are now allowed to play!')
+            sock.connect((SERVER_IP, PORT))
+            waitingForInput()
 
-        if message.content.startswith('Backwards'):
-            commands.backwards()   
-            await message.channel.send('Backwards Control Toggled!')
+        if message.content.startswith('Stop'):
+            await message.channel.send('You are no longer playing!')
+            sock.close()
     else:
         await message.channel.send('You do not have the permission to control the game!')
         
