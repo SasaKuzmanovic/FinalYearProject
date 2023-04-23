@@ -9,12 +9,13 @@ import socket
 from pynput.keyboard import Key, Controller
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-SERVER_IP = "51.37.224.10"
+SERVER_IP = "109.76.62.13"
 TCP_IP = ""
-PORT = 9000
+PORT = 9011
 buffer_size = 1024
 msg = ("X PRESSED...")
 
+buttonToBePressed = ""
 
 intents = discord.Intents.all()
 client = discord.Client(command_prefix='!', intents=intents)
@@ -66,9 +67,9 @@ async def on_ready():
         #print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
         #print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
 
-def sendInput():
-    print("Attempting to send message: " + msg)
-    sock.send(msg.encode('utf8'))
+def sendInput(button):
+    print("Attempting to send message: " + button)
+    sock.send(button.encode('utf8'))
 
     data = sock.recv(buffer_size).decode('utf-8')
     print("Received: " + data)
@@ -77,10 +78,9 @@ def sendInput():
 def waitForInput():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_ip = ""
-    port = 9000
+    port = 9011
     s.bind((tcp_ip, port))
-    while not False:
-        s.listen(1)
+    s.listen(1)
 
     con, addr = s.accept()
     print("Connection from: ", addr)
@@ -89,10 +89,11 @@ def waitForInput():
         if not data:
             break
         print("Data received: " + data)
-        data = "I Got it thanks"
-        print("Sending response: " + data)
+        buttonToBePressed = data
+        #print("Sending response: " + data)
         con.send(data.encode('utf-8'))
-    sock.close()
+    s.close()
+    commands.checkForContents(buttonToBePressed)
 
 def waitingForInput():
     done = False
@@ -108,37 +109,28 @@ def waitingForInput():
                     # To be added   1. Add message sending to channels
                     #               2. Triggering a function when a button is pressed and the message is sent to discord. Try to trigger the function before the message is sent to reduce latency
                     joystick = joysticks[event.instance_id]
-                    keyboard.press('w')
-                    keyboard.press(Key.enter)
+                    #keyboard.press('w')
+                    #keyboard.press(Key.enter)
                     if joystick.rumble(0, 0.7, 500):
                         print(f"Rumble effect played on joystick {event.instance_id}")
-                    sendInput()
+                    sendInput('w')
                 if event.button == 1:
-                    joystick = joysticks[event.instance_id]
-                    keyboard.press('y')
-                    keyboard.press(Key.enter)
+                    sendInput('s')
                 if event.button == 13:
-                    joystick = joysticks[event.instance_id]
-                    keyboard.press('a')
-                    keyboard.press(Key.enter)
+                    sendInput('a')
                 if event.button == 14:
-                    joystick = joysticks[event.instance_id]
-                    keyboard.press('d')
-                    keyboard.press(Key.enter)
+                    sendInput('d')
 
             if event.type == pygame.JOYBUTTONUP:
                 if event.button == 0:
-                    time.sleep(0.2)
-                    keyboard.release(Key.up)
-                    print("I tried Release UP")
+                    #time.sleep(0.2)
+                    #keyboard.release(Key.up)
+                    #print("I tried Release UP")
+                    sendInput('wr')
                 if event.button == 13:
-                    time.sleep(0.1)
-                    keyboard.release(Key.left)
-                    print("I released left")
+                    sendInput('ar')
                 if event.button == 14:
-                    time.sleep(0.1)
-                    keyboard.release(Key.right)
-                    print("I released right")
+                    sendInput('dr')
 
             # Handle hotplugging
             if event.type == pygame.JOYDEVICEADDED:

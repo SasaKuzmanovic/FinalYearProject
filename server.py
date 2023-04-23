@@ -2,7 +2,7 @@ import socket
 
 tcp1 = socket.socket(socket.AF_INET , socket.SOCK_STREAM)
 tcp_ip = ""         #Any interface
-port = 9000        #Arbitrary non-privileged port
+port = 9011        #Unused port
 buffer_size = 1024
 msg = ("Connected...")
 
@@ -11,7 +11,6 @@ tcp1.bind ((tcp_ip , port))
 tcp1.listen(1)
 con, addr = tcp1.accept()
 print ("TCP Connection from: ", addr)
-
 
 
 while True:

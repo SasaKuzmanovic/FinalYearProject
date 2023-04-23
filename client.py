@@ -1,8 +1,9 @@
 import socket
 
 tcp1 = socket.socket(socket.AF_INET , socket.SOCK_STREAM)
-tcp_ip = "127.0.0.1"
-port = 9000
+tcp_ip = "93.141.159.42"
+#tcp_ip = "127.0.0.1"
+port = 9010
 buffer_size = 1024
 msg = ("Client test.")
 
