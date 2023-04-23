@@ -50,8 +50,9 @@ async def on_ready():
         print('====================================')
         print('========You are now a viewer========')
         print('====================================')
-        #sock.connect((SERVER_IP, PORT))
-        #waitingForInput()
+        print('=======Say "Hello" to the bot=======')
+        print('========To play, say "Play"=========')
+        print('====================================')
     else:
         myGuild = client.get_guild(1047959171825405972)
         role = discord.utils.get(myGuild.roles, id=1047961554680823898)
@@ -61,10 +62,6 @@ async def on_ready():
         print('Enjoy shared gameplay')
         waitForInput()
         
-
-        #print(f'We have logged in as {client.user}!')  ## Prints the user name of the Bot when it connects
-        #print(f'Guild: {myGuild}')  # Prints the Server name where it is currently operating
-        #print(f'Role for sharing gameplay: {role}') # Displays the role that a viewer has to have
 
 def sendInput(button):
     print("Attempting to send message: " + button)
@@ -97,7 +94,6 @@ def waitForInput():
 def waitingForInput():
     done = False
     while not done:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True  # Flag that we are done so we exit this loop.
@@ -108,8 +104,6 @@ def waitingForInput():
                     # To be added   1. Add message sending to channels
                     #               2. Triggering a function when a button is pressed and the message is sent to discord. Try to trigger the function before the message is sent to reduce latency
                     joystick = joysticks[event.instance_id]
-                    #keyboard.press('w')
-                    #keyboard.press(Key.enter)
                     if joystick.rumble(0, 0.7, 500):
                         print(f"Rumble effect played on joystick {event.instance_id}")
                     sendInput('w')
@@ -120,16 +114,13 @@ def waitingForInput():
                 if event.button == 14:
                     sendInput('d')
 
-            #if event.type == pygame.JOYBUTTONUP:
-                #if event.button == 0:
-                    #time.sleep(0.2)
-                    #keyboard.release(Key.up)
-                    #print("I tried Release UP")
-                    #sendInput('wr')
-               #if event.button == 13:
-                    #sendInput('ar')
-               # if event.button == 14:
-                    #sendInput('dr')
+            if event.type == pygame.JOYBUTTONUP:
+                if event.button == 0:
+                    sendInput('wr')
+                if event.button == 13:
+                    sendInput('ar')
+                if event.button == 14:
+                    sendInput('dr')
 
             # Handle hotplugging
             if event.type == pygame.JOYDEVICEADDED:
@@ -176,12 +167,7 @@ async def on_message(message):
             await message.channel.send('You are now allowed to play!')
             sock.connect((SERVER_IP, PORT))
             waitingForInput()
-
-        if message.content.startswith('Stop'):
-            await message.channel.send('You are no longer playing!')
-            sock.close()
     else:
         await message.channel.send('You do not have the permission to control the game!')
         
-
 client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.G5XCLt.ZOodFHcrD54e8oWgtuhjNejRUWeFBEeQHR0z2w")
