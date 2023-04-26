@@ -9,7 +9,7 @@ import socket
 from pynput.keyboard import Key, Controller
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-SERVER_IP = "109.76.62.13"
+SERVER_IP = "93.107.73.78"
 TCP_IP = ""
 PORT = 9011
 buffer_size = 1024
@@ -155,7 +155,6 @@ async def on_message(message):
         print(f'User: {user} has the role: {role}')
 
         print(message.content)
-        commands.checkForContents(message)
 
         if message.author == client.user:
             return
@@ -170,4 +169,4 @@ async def on_message(message):
     else:
         await message.channel.send('You do not have the permission to control the game!')
         
-client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.G5XCLt.ZOodFHcrD54e8oWgtuhjNejRUWeFBEeQHR0z2w")
+client.run("MTA0Nzk1OTgwMjA4MjUwODg2MA.GxVMzB.lpatTKZmALVRm-iyfnRgM9DyRhJ7vTYhZT2wzw")
